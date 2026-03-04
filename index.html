@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>精细化工安全环保法规库</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+    <div id="app">
+        <!-- 加载界面 -->
+        <div class="loading-screen" id="loadingScreen">
+            <div class="loading-content">
+                <div class="loading-icon">⚗️</div>
+                <div class="loading-text">法规标准库</div>
+                <div class="loading-bar">
+                    <div class="loading-progress"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 主应用 -->
+        <div class="app-container hidden" id="appContainer">
+            <!-- 顶部导航 -->
+            <header class="top-nav">
+                <div class="nav-brand">
+                    <span class="brand-icon">⚗️</span>
+                    <span class="brand-text">法规标准库</span>
+                </div>
+                <div class="nav-search">
+                    <input type="text" id="globalSearch" placeholder="搜索标准、关键词..." autocomplete="off">
+                    <button class="search-btn" id="searchBtn">🔍</button>
+                </div>
+                <button class="menu-toggle" id="menuToggle">☰</button>
+            </header>
+
+            <!-- 侧边栏（移动端抽屉） -->
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <span>分类导航</span>
+                    <button class="close-sidebar" id="closeSidebar">✕</button>
+                </div>
+                <nav class="sidebar-nav">
+                    <div class="nav-section">
+                        <div class="nav-title">标准分类</div>
+                        <a href="#" class="nav-link active" data-filter="all">
+                            <span class="link-icon">📋</span>
+                            <span>全部标准</span>
+                            <span class="badge" id="countAll">0</span>
+                        </a>
+                        <a href="#" class="nav-link" data-filter="安全">
+                            <span class="link-icon">🛡️</span>
+                            <span>安全生产</span>
+                            <span class="badge" id="countSafety">0</span>
+                        </a>
+                        <a href="#" class="nav-link" data-filter="环保">
+                            <span class="link-icon">🌿</span>
+                            <span>环境保护</span>
+                            <span class="badge" id="countEnv">0</span>
+                        </a>
+                    </div>
+                    <div class="nav-section">
+                        <div class="nav-title">功能</div>
+                        <a href="#" class="nav-link" data-view="favorites">
+                            <span class="link-icon">⭐</span>
+                            <span>我的收藏</span>
+                        </a>
+                        <a href="#" class="nav-link" data-view="checklist">
+                            <span class="link-icon">✓</span>
+                            <span>检查清单</span>
+                        </a>
+                        <a href="#" class="nav-link" data-view="timeline">
+                            <span class="link-icon">📅</span>
+                            <span>合规时间轴</span>
+                        </a>
+                    </div>
+                    <div class="nav-section">
+                        <div class="nav-title">筛选</div>
+                        <a href="#" class="nav-link" data-filter="即将实施">
+                            <span class="link-icon">⏰</span>
+                            <span>即将实施</span>
+                        </a>
+                        <a href="#" class="nav-link" data-filter="强制性">
+                            <span class="link-icon">⚡</span>
+                            <span>强制性标准</span>
+                        </a>
+                    </div>
+                </nav>
+                <div class="sidebar-footer">
+                    <div class="version-info">
+                        <span>v1.0.0</span>
+                        <button id="updateBtn" class="update-link">检查更新</button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- 遮罩层 -->
+            <div class="overlay" id="overlay"></div>
+
+            <!-- 主内容区 -->
+            <main class="main-content">
+                <!-- 视图：标准列表 -->
+                <div class="view" id="standardsView">
+                    <div class="view-header">
+                        <h1 id="viewTitle">全部标准</h1>
+                        <div class="filter-chips" id="filterChips">
+                            <button class="chip active" data-chip="all">全部</button>
+                            <button class="chip" data-chip="安全">安全</button>
+                            <button class="chip" data-chip="环保">环保</button>
+                            <button class="chip" data-chip="即将实施">即将实施</button>
+                        </div>
+                    </div>
+                    <div class="standards-grid" id="standardsGrid">
+                        <!-- 标准卡片动态生成 -->
+                    </div>
+                    <div class="empty-state hidden" id="emptyState">
+                        <div class="empty-icon">🔍</div>
+                        <p>未找到匹配的标准</p>
+                    </div>
+                </div>
+
+                <!-- 视图：收藏夹 -->
+                <div class="view hidden" id="favoritesView">
+                    <div class="view-header">
+                        <h1>我的收藏</h1>
+                    </div>
+                    <div class="standards-grid" id="favoritesGrid"></div>
+                    <div class="empty-state" id="favoritesEmpty">
+                        <div class="empty-icon">⭐</div>
+                        <p>暂无收藏</p>
+                        <p class="empty-hint">点击标准卡片右上角的星标添加收藏</p>
+                    </div>
+                </div>
+
+                <!-- 视图：检查清单 -->
+                <div class="view hidden" id="checklistView">
+                    <div class="view-header">
+                        <h1>检查清单</h1>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                            <span class="progress-text" id="progressText">0%</span>
+                        </div>
+                    </div>
+                    <div class="checklist-container" id="checklistContainer">
+                        <!-- 检查清单动态生成 -->
+                    </div>
+                </div>
+
+                <!-- 视图：时间轴 -->
+                <div class="view hidden" id="timelineView">
+                    <div class="view-header">
+                        <h1>合规时间轴</h1>
+                    </div>
+                    <div class="timeline" id="timeline"></div>
+                </div>
+            </main>
+        </div>
+
+        <!-- 详情模态框 -->
+        <div class="modal hidden" id="detailModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="modal-back" id="modalBack">←</button>
+                    <h2 id="modalTitle">标准详情</h2>
+                    <button class="modal-favorite" id="modalFavorite">☆</button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <!-- 详情内容 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 提示消息 -->
+        <div class="toast hidden" id="toast">
+            <span id="toastMessage"></span>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
