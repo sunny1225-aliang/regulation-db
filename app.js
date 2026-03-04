@@ -525,6 +525,31 @@ function openDetail(id) {
     document.body.style.overflow = 'hidden';
 }
 
+// 获取下载链接 HTML
+function getDownloadLink(standardId) {
+    const pdfFiles = {
+        'AQ-3062-2025': 'AQ 3062-2025 精细化工企业安全管理规范.pdf'
+    };
+    
+    if (!pdfFiles[standardId]) return '';
+    
+    const pdfName = pdfFiles[standardId];
+    return `
+        <div class="detail-section">
+            <h3>标准原文下载</h3>
+            <a href="https://github.com/sunny1225-aliang/regulation-db/raw/main/标准原文/${encodeURIComponent(pdfName)}" 
+               class="download-btn" target="_blank" download>
+                <span>📄</span>
+                <span>${pdfName}</span>
+                <span style="margin-left:auto;">⬇️</span>
+            </a>
+            <p style="font-size:12px;color:#64748b;margin-top:8px;">
+                如无法下载，请访问 GitHub 仓库手动下载
+            </p>
+        </div>
+    `;
+}
+
 // 生成详情 HTML
 function generateDetailHTML(s) {
     let html = `
@@ -542,6 +567,8 @@ function generateDetailHTML(s) {
             <h3>标准摘要</h3>
             <p>${s.summary}</p>
         </div>
+        
+        ${getDownloadLink(s.id)}
         
         <div class="detail-section">
             <h3>核心要点</h3>

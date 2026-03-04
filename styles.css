@@ -852,6 +852,28 @@ body {
 .danger-level.l4 { background: #fecaca; color: #7f1d1d; }
 .danger-level.l5 { background: #991b1b; color: white; }
 
+/* 下载按钮 */
+.download-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.download-btn:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
 /* Toast 提示 */
 .toast {
     position: fixed;
